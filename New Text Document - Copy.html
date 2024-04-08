@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Chat</title>
+    <style>
+        /* Adjusted styling */
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+        #chat-box {
+            width: 400px;
+            margin: 50px auto;
+            border: 2px solid #3498db;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #messages {
+            max-height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .message-content {
+            margin-bottom: 5px;
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-box">
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <input type="file" id="image-input" accept="image/*"> <!-- Input field for selecting images -->
+        <input type="file" id="video-input" accept="video/*"> <!-- Input field for selecting videos -->
+        <button onclick="sendMessage()">Send</button>
+    </div>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script type="text/babel">
+        // React components
+        function Message({ content, onDelete }) {
+            return (
+                <div className="message">
+                    <div className="message-content">{content}</div>
+                    <button className="delete-button" onClick={onDelete}>Delete</button>
+                </div>
+            );
+        }
+
+        // Chat component
+        function Chat() {
+            const [messages, setMessages] = React.useState([]);
+
+            function sendMessage() {
+                const messageInput = document.getElementById('message-input');
+                const message = messageInput.value.trim();
+                if (message !== '') {
+                    setMessages([...messages, message]);
+                    messageInput.value = '';
+                }
+            }
+
+            function deleteMessage(index) {
+                const updatedMessages = [...messages];
+                updatedMessages.splice(index, 1);
+                setMessages(updatedMessages);
+            }
+
+            return (
+                <div>
+                    <div id="messages">
+                        {messages.map((message, index) => (
+                            <Message key={index} content={message} onDelete={() => deleteMessage(index)} />
+                        ))}
+                    </div>
+                    <input type="text" id="message-input" placeholder="Type your message..." />
+                    <input type="file" id="image-input" accept="image/*" /> {/* Input field for selecting images */}
+                    <input type="file" id="video-input" accept="video/*" /> {/* Input field for selecting videos */}
+                    <button onClick={sendMessage}>Send</button>
+                </div>
+            );
+        }
+
+        // Render the Chat component
+        ReactDOM.render(<Chat />, document.getElementById('chat-box'));
+    </script>
+</body>
+</html>
